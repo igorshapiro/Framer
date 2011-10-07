@@ -22,7 +22,8 @@ namespace Framer
         }
 
         public ImagesListModel GetImagesList() {
-            return new ImagesListModel(@"C:\Users\Public\Pictures\Sample Pictures");
+            return new ImagesListModel(@"C:\Users\Public\Pictures\Sample Pictures",
+                @"C:\Users\Public\Pictures\Frames");
         }
 
         private void OnFileExitClick(object sender, RoutedEventArgs e) {
@@ -46,6 +47,11 @@ namespace Framer
         private void OnImageCountIncrease(object sender, RoutedEventArgs e) {
             var mdl = (ImageInfoModel)((Button)sender).DataContext;
             mdl.ImagesCount++;
+        }
+
+        private void Frame_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            var mdl = (FrameInfoModel) ((Image) sender).DataContext;
+            mdl.WorldModel.SelectedFrame = mdl;
         }
     }
 }

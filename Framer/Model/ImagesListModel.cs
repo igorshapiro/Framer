@@ -5,17 +5,61 @@ using System.Linq;
 
 namespace Framer.Model
 {
-    public class ImagesListModel {
+    public class ImagesListModel: INotifyPropertyChanged {
         public IList<ImageInfoModel> Images { get; set; }
+        public IList<FrameInfoModel> Frames { get; set; }
         public double ThumbnailSize { get; set; }
+        private FrameInfoModel m_selectedFrame;
+        public FrameInfoModel SelectedFrame {
+            get { return m_selectedFrame; }
+            set {
+                if (value != null)
+                    m_selectedFrame = value;
+                foreach (var frame in Frames) {
+                    frame.IsSelected = ReferenceEquals(value, frame);
+                }
+            }
+        }
 
-        public ImagesListModel(string imagesDir) {
+        public ImagesListModel(string imagesDir, string framesDir) {
             ThumbnailSize = 200;
-            Images = 
-                new[]{"*.png", "*.jpg", "*.bmp", "*.gif"}
+            Images = new[] {"*.png", "*.jpg", "*.bmp", "*.gif"}
                 .SelectMany(pattern => Directory.GetFiles(imagesDir, pattern))
                 .Select(fn => new ImageInfoModel {Path = fn})
                 .ToList();
+
+            Frames = new[] {"*.png", "*.gif"}
+                .SelectMany(pattern => Directory.GetFiles(framesDir, pattern))
+                .Select(fn => new FrameInfoModel {Path = fn, WorldModel = this})
+                .ToList();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class FrameInfoModel: INotifyPropertyChanged {
+        public ImagesListModel WorldModel { get; set; }
+
+        public string Path { get; set; }
+        private bool m_isSelected;
+        public bool IsSelected {
+            get { return m_isSelected; }
+            set {
+                m_isSelected = value;
+                OnPropertyChanged("IsSelected");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName) {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

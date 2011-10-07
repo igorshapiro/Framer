@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="styleImageControls" TargetType="Border">
+        <Style.Resources>
+            <LinearGradientBrush x:Key="BackBrush" StartPoint="0.5,0" EndPoint="0.5,1" >
+                <GradientStop Color="#FFD800" Offset="0.1" />
+                <GradientStop Color="#FFB27F" Offset="0.9" />
+            </LinearGradientBrush>
+        </Style.Resources>
+        <Setter Property="Background" Value="{StaticResource BackBrush}"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Margin" Value="2,4" />
+    </Style>
+</ResourceDictionary>

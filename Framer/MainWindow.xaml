@@ -5,9 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:ImagesListModel}">
     <Window.Resources>
-        <ResourceDictionary Source="Styles.xaml" />
+        <DataTemplate x:Key="frame">
+            <Border Name="frameImgBorder" BorderBrush="Black" BorderThickness="3">
+                <Image Source="{Binding Path}" Width="200" MouseUp="Frame_MouseUp" />
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter TargetName="frameImgBorder" Property="BorderBrush" Value="Red" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
     </Window.Resources>
     <DockPanel Name="grdOuter">
+        <DockPanel.Resources>
+            <ResourceDictionary Source="Styles.xaml"/>
+        </DockPanel.Resources>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Options" Click="OnFileOptionsClick"></MenuItem>
@@ -22,41 +34,54 @@
                 <Label Content="{Binding ElementName=slImageWidth, Path=Maximum }"></Label>
             </StackPanel>
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
+        <!-- Frames pane -->
+        <ItemsControl DockPanel.Dock="Right" ItemsSource="{Binding Frames}" 
+                       ItemTemplate="{StaticResource frame}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel></WrapPanel>
+                    <StackPanel Orientation="Vertical" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate >
-                    <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
-                        <Border BorderBrush="Black" BorderThickness="2">
-                            <Image Source="{Binding Path}" 
-                                Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
-                                Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"/>
-
-                        </Border>
-                        <Border Style="{StaticResource ResourceKey=styleImageControls}">
-                            <Grid VerticalAlignment="Center">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <!-- Selection checkbox -->
-                                <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
-                                <!-- Spinner -->
-                                <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal">
-                                    <Button Click="OnImageCountDecrease">-</Button>
-                                    <TextBox Text="{Binding ImagesCount}"></TextBox>
-                                    <Button Click="OnImageCountIncrease">+</Button>
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <!-- Images content view -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel></WrapPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
+                            <Border BorderBrush="Black" BorderThickness="2">
+                                <DockPanel LastChildFill="True">
+                                    <Image Source="{Binding Path}" 
+                                        Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
+                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"/>
+                                </DockPanel>
+                            </Border>
+                            <Border Style="{StaticResource ResourceKey=styleImageControls}">
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Selection checkbox -->
+                                    <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
+                                    <!-- Spinner -->
+                                    <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal">
+                                        <Button Click="OnImageCountDecrease">-</Button>
+                                        <TextBox Text="{Binding ImagesCount}"></TextBox>
+                                        <Button Click="OnImageCountIncrease">+</Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </DockPanel>
 </Window>
