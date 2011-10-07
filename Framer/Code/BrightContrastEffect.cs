@@ -20,7 +20,7 @@ namespace Framer.Code {
             set { SetValue(InputProperty, value); }
         }
 
-        public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(BrightContrastEffect), 0);
+        public static readonly DependencyProperty InputProperty = RegisterPixelShaderSamplerProperty("Input", typeof(BrightContrastEffect), 0);
 
         public float Brightness
         {

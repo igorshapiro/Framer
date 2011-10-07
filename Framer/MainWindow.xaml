@@ -79,10 +79,16 @@
                                     <!-- Selection checkbox -->
                                     <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
                                     <!-- Brightness slider -->
-                                    <Slider Orientation="Horizontal" Grid.Column="1" 
-                                            Name="sldBrightness" Minimum="-1" Maximum="1" Value="{Binding Brightness}" />
+                                    <StackPanel Orientation="Vertical" Grid.Column="1" >
+                                        <Label>Contrast</Label>
+                                        <Slider Orientation="Horizontal" 
+                                                Name="sldContrast" Minimum="-1" Maximum="1" Value="{Binding Contrast}" />
+                                        <Label>Brightness</Label>
+                                        <Slider Orientation="Horizontal" 
+                                                Name="sldBrightness" Minimum="-1" Maximum="1" Value="{Binding Brightness}" />
+                                    </StackPanel>
                                     <!-- Spinner -->
-                                    <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal">
+                                    <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal" VerticalAlignment="Center">
                                         <Button Click="OnImageCountDecrease">-</Button>
                                         <TextBox Text="{Binding ImagesCount}"></TextBox>
                                         <Button Click="OnImageCountIncrease">+</Button>

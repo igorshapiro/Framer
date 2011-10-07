@@ -83,7 +83,14 @@ namespace Framer.Model
             }
         }
 
-        public double Contrast { get; set; }
+        private double m_contrast;
+        public double Contrast {
+            get { return m_contrast; }
+            set {
+                m_contrast = value;
+                OnPropertyChanged("Contrast");
+            }
+        }
 
         private int m_imagesCount;
         public int ImagesCount {
