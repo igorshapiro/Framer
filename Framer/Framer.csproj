@@ -105,6 +105,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\BrightContrastEffect.cs" />
     <Compile Include="Model\WorldModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -123,6 +124,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="bricon.fx" />
+    <Resource Include="bricon.ps" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -3,15 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow" Height="350" Width="525"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
-        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
+        xmlns:Code="clr-namespace:Framer.Code" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
     <Window.Resources>
         <DataTemplate x:Key="frame">
             <Border Name="frameImgBorder" BorderBrush="Black" BorderThickness="3">
-                <Image Source="{Binding Path}" Width="200" MouseUp="Frame_MouseUp" />
+                <Image Source="{Binding Path}" Width="200" MouseUp="Frame_MouseUp" Opacity="0.95" />
             </Border>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                     <Setter TargetName="frameImgBorder" Property="BorderBrush" Value="Red" />
+                    <Setter TargetName="frameImgBorder" Property="Background" Value="Cyan" />
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
@@ -56,9 +57,16 @@
                         <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
                             <Border BorderBrush="Black" BorderThickness="2">
                                 <DockPanel LastChildFill="True">
-                                    <Image Source="{Binding Path}" 
+                                    <Image Source="{Binding Path}"
                                         Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
-                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"/>
+                                        Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}">
+                                        <Image.Effect>
+                                            <Code:BrightContrastEffect 
+                                                Brightness="{Binding Brightness}"
+                                                Contrast="{Binding Contrast}"
+                                                />
+                                        </Image.Effect>
+                                    </Image>
                                 </DockPanel>
                             </Border>
                             <Border Style="{StaticResource ResourceKey=styleImageControls}">
@@ -70,6 +78,9 @@
                                     </Grid.ColumnDefinitions>
                                     <!-- Selection checkbox -->
                                     <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
+                                    <!-- Brightness slider -->
+                                    <Slider Orientation="Horizontal" Grid.Column="1" 
+                                            Name="sldBrightness" Minimum="-1" Maximum="1" Value="{Binding Brightness}" />
                                     <!-- Spinner -->
                                     <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal">
                                         <Button Click="OnImageCountDecrease">-</Button>

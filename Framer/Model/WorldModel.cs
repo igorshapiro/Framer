@@ -74,6 +74,16 @@ namespace Framer.Model
 
     public class ImageInfoModel: INotifyPropertyChanged {
         public string Path { get; set; }
+        private double m_brightness;
+        public double Brightness {
+            get { return m_brightness; }
+            set {
+                m_brightness = value;
+                OnPropertyChanged("Brightness");
+            }
+        }
+
+        public double Contrast { get; set; }
 
         private int m_imagesCount;
         public int ImagesCount {
@@ -86,6 +96,8 @@ namespace Framer.Model
 
         public ImageInfoModel() {
             ImagesCount = 1;
+            Brightness = 0;
+            Contrast = 0;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
