@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="Framer.DesignControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Code="clr-namespace:Framer.Code"
+             xmlns:Model="clr-namespace:Framer.Model" mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
+    <UserControl.Resources>
+        <DataTemplate x:Key="frame">
+            <Border Name="frameImgBorder" BorderBrush="Black" BorderThickness="3">
+                <Image Source="{Binding Path}" Width="200" MouseUp="Frame_MouseUp" Opacity="0.95" />
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter TargetName="frameImgBorder" Property="BorderBrush" Value="Red" />
+                    <Setter TargetName="frameImgBorder" Property="Background" Value="Cyan" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
+    <DockPanel>
+        <DockPanel.Resources>
+            <ResourceDictionary Source="Styles.xaml"/>
+        </DockPanel.Resources>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ElementName=slImageWidth, Path=Minimum }" Width="Auto"></Label>
+                <Slider x:Name="slImageWidth"  Width="100" Maximum="500" Minimum="50" Value="{Binding ThumbnailSize}" />
+                <Label Content="{Binding ElementName=slImageWidth, Path=Maximum }"></Label>
+            </StackPanel>
+        </StackPanel>
+        <!-- Frames pane -->
+        <ItemsControl DockPanel.Dock="Right" ItemsSource="{Binding Frames}" 
+                                   ItemTemplate="{StaticResource frame}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <!-- Images content view -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel></WrapPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
+                            <Border BorderBrush="Black" BorderThickness="2">
+                                <Grid>
+                                    <Image Source="{Binding Path}" Name="img"
+                                                    Grid.Row="0" Grid.Column="0"
+                                                    MouseUp="Image_MouseUp"
+                                                    Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
+                                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}">
+                                        <Image.Effect>
+                                            <Code:BrightContrastEffect 
+                                                            Brightness="{Binding Brightness}"
+                                                            Contrast="{Binding Contrast}"
+                                                            />
+                                        </Image.Effect>
+                                    </Image>
+                                    <Image Source="{Binding Path=Frame.Path}" 
+                                                       Grid.Row="0" Grid.Column="0"
+                                                       MouseUp="Image_MouseUp"
+                                                       VerticalAlignment="Stretch"
+                                                       HorizontalAlignment="Stretch"
+                                                       Opacity="1"
+                                                       Width="{Binding ElementName=img, Path=ActualWidth}"
+                                                       Height="{Binding ElementName=img, Path=ActualHeight}"
+                                                       >
+                                    </Image>
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource ResourceKey=styleImageControls}">
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Selection checkbox -->
+                                    <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
+                                    <!-- Brightness slider -->
+                                    <StackPanel Orientation="Vertical" Grid.Column="1" >
+                                        <Label>Contrast</Label>
+                                        <Slider Orientation="Horizontal" 
+                                                            Name="sldContrast" Minimum="-1" Maximum="1" Value="{Binding Contrast}" />
+                                        <Label>Brightness</Label>
+                                        <Slider Orientation="Horizontal" 
+                                                            Name="sldBrightness" Minimum="-1" Maximum="1" Value="{Binding Brightness}" />
+                                    </StackPanel>
+                                    <!-- Spinner -->
+                                    <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Click="OnImageCountDecrease">-</Button>
+                                        <TextBox Text="{Binding ImagesCount}"></TextBox>
+                                        <Button Click="OnImageCountIncrease">+</Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

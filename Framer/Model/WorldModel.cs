@@ -18,6 +18,18 @@ namespace Framer.Model
             }
         }
 
+        public IList<ImageInfoModel> FlattenedImageList {
+            get {
+                var result = new List<ImageInfoModel>();
+                foreach (var img in Images) {
+                    for (int i = 0; i < img.ImagesCount; i++) {
+                        result.Add(img);
+                    }
+                }
+                return result;
+            }
+        }
+
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
             get { return m_selectedFrame; }
