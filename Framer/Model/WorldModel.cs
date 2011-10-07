@@ -75,6 +75,16 @@ namespace Framer.Model
     public class ImageInfoModel: INotifyPropertyChanged {
         public string Path { get; set; }
         private double m_brightness;
+
+        private FrameInfoModel m_frame;
+        public FrameInfoModel Frame {
+            get { return m_frame; }
+            set {
+                m_frame = value;
+                OnPropertyChanged("Frame");
+            }
+        }
+
         public double Brightness {
             get { return m_brightness; }
             set {

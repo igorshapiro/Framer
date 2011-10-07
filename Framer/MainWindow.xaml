@@ -56,8 +56,10 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
                             <Border BorderBrush="Black" BorderThickness="2">
-                                <DockPanel LastChildFill="True">
-                                    <Image Source="{Binding Path}"
+                                <Grid>
+                                    <Image Source="{Binding Path}" Name="img"
+                                        Grid.Row="0" Grid.Column="0"
+                                        MouseUp="Image_MouseUp"
                                         Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
                                         Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}">
                                         <Image.Effect>
@@ -67,7 +69,17 @@
                                                 />
                                         </Image.Effect>
                                     </Image>
-                                </DockPanel>
+                                    <Image Source="{Binding Path=Frame.Path}" 
+                                           Grid.Row="0" Grid.Column="0"
+                                           MouseUp="Image_MouseUp"
+                                           VerticalAlignment="Stretch"
+                                           HorizontalAlignment="Stretch"
+                                           Opacity="1"
+                                           Width="{Binding ElementName=img, Path=ActualWidth}"
+                                           Height="{Binding ElementName=img, Path=ActualHeight}"
+                                           >
+                                    </Image>
+                                </Grid>
                             </Border>
                             <Border Style="{StaticResource ResourceKey=styleImageControls}">
                                 <Grid VerticalAlignment="Center">

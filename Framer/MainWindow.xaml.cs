@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Framer.Model;
 
 namespace Framer
@@ -50,9 +49,16 @@ namespace Framer
             mdl.ImagesCount++;
         }
 
-        private void Frame_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+        private void Frame_MouseUp(object sender, MouseButtonEventArgs e) {
             var mdl = (FrameInfoModel) ((Image) sender).DataContext;
             mdl.WorldModel.SelectedFrame = mdl;
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e) {
+            var world = (WorldModel) DataContext;
+            var imgInfo = (ImageInfoModel) ((Image) sender).DataContext;
+            if (world.SelectedFrame != null)
+                imgInfo.Frame = world.SelectedFrame;
         }
     }
 }
