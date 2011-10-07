@@ -1,0 +1,54 @@
+﻿<Window x:Class="Framer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="MainWindow" Height="350" Width="525"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:ImagesListModel}">
+    <Grid Name="grdOuter">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu IsMainMenu="True">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Options" Click="OnFileOptionsClick"></MenuItem>
+                <Separator/>
+                <MenuItem Header="_Exit" Click="OnFileExitClick"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel></WrapPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Row="0" Grid.Column="0"></CheckBox>
+                        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="2">
+                            <Image Source="{Binding Path}" 
+                                Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Width}"/>
+                        
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+            
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ElementName=slImageWidth, Path=Minimum }" Width="Auto"></Label>
+                <Slider x:Name="slImageWidth"  Width="100" Maximum="500" Minimum="50" Value="{Binding Width}" />
+                <Label Content="{Binding ElementName=slImageWidth, Path=Maximum }"></Label>
+            </StackPanel>
+            
+        </StackPanel>
+        
+    </Grid>
+</Window>
