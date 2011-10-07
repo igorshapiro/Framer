@@ -21,8 +21,8 @@ namespace Framer
             DataContext = GetImagesList();
         }
 
-        public ImagesListModel GetImagesList() {
-            return new ImagesListModel(@"C:\Users\Public\Pictures\Sample Pictures",
+        public WorldModel GetImagesList() {
+            return new WorldModel(@"C:\Users\Public\Pictures\Sample Pictures",
                 @"C:\Users\Public\Pictures\Frames");
         }
 

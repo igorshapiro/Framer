@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Framer.Model
 {
-    public class ImagesListModel: INotifyPropertyChanged {
+    public class WorldModel: INotifyPropertyChanged {
         public IList<ImageInfoModel> Images { get; set; }
         public IList<FrameInfoModel> Frames { get; set; }
 
@@ -30,7 +30,7 @@ namespace Framer.Model
             }
         }
 
-        public ImagesListModel(string imagesDir, string framesDir) {
+        public WorldModel(string imagesDir, string framesDir) {
             ThumbnailSize = 200;
             Images = new[] {"*.png", "*.jpg", "*.bmp", "*.gif"}
                 .SelectMany(pattern => Directory.GetFiles(imagesDir, pattern))
@@ -52,7 +52,7 @@ namespace Framer.Model
     }
 
     public class FrameInfoModel: INotifyPropertyChanged {
-        public ImagesListModel WorldModel { get; set; }
+        public WorldModel WorldModel { get; set; }
 
         public string Path { get; set; }
         private bool m_isSelected;
