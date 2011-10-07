@@ -4,20 +4,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:ImagesListModel}">
-    <Grid Name="grdOuter">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Menu IsMainMenu="True">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml" />
+    </Window.Resources>
+    <DockPanel Name="grdOuter">
+        <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Options" Click="OnFileOptionsClick"></MenuItem>
                 <Separator/>
                 <MenuItem Header="_Exit" Click="OnFileExitClick"></MenuItem>
             </MenuItem>
         </Menu>
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ElementName=slImageWidth, Path=Minimum }" Width="Auto"></Label>
+                <Slider x:Name="slImageWidth"  Width="100" Maximum="500" Minimum="50" Value="{Binding ThumbnailSize}" />
+                <Label Content="{Binding ElementName=slImageWidth, Path=Maximum }"></Label>
+            </StackPanel>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel></WrapPanel>
@@ -25,30 +30,33 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Row="0" Grid.Column="0"></CheckBox>
-                        <Border Grid.Row="0" Grid.Column="1" BorderBrush="Black" BorderThickness="2">
+                    <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
+                        <Border BorderBrush="Black" BorderThickness="2">
                             <Image Source="{Binding Path}" 
-                                Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.Width}"/>
-                        
+                                Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
+                                Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"/>
+
                         </Border>
-                    </Grid>
+                        <Border Style="{StaticResource ResourceKey=styleImageControls}">
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- Selection checkbox -->
+                                <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
+                                <!-- Spinner -->
+                                <StackPanel Grid.Column="2" Margin="0, 0, 5, 0" Orientation="Horizontal">
+                                    <Button Click="OnImageCountDecrease">-</Button>
+                                    <TextBox Text="{Binding ImagesCount}"></TextBox>
+                                    <Button Click="OnImageCountIncrease">+</Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
-            
-            <StackPanel Orientation="Horizontal">
-                <Label Content="{Binding ElementName=slImageWidth, Path=Minimum }" Width="Auto"></Label>
-                <Slider x:Name="slImageWidth"  Width="100" Maximum="500" Minimum="50" Value="{Binding Width}" />
-                <Label Content="{Binding ElementName=slImageWidth, Path=Maximum }"></Label>
-            </StackPanel>
-            
-        </StackPanel>
-        
-    </Grid>
+    </DockPanel>
 </Window>

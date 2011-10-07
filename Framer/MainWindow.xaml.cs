@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using Framer.Model;
 
 namespace Framer
@@ -21,16 +22,7 @@ namespace Framer
         }
 
         public ImagesListModel GetImagesList() {
-            return new ImagesListModel
-                   {
-                       Images = new List<ImageInfoModel>
-                                {
-                                    new ImageInfoModel
-                                    {
-                                        Path = @"C:\Users\Public\Pictures\Sample Pictures\Chrysanthemum.jpg"
-                                    }
-                                }
-                   };
+            return new ImagesListModel(@"C:\Users\Public\Pictures\Sample Pictures");
         }
 
         private void OnFileExitClick(object sender, RoutedEventArgs e) {
@@ -43,6 +35,17 @@ namespace Framer
 
         private void OnImagesListDragEnter(object sender, DragEventArgs e) {
             e.Effects = DragDropEffects.Copy;
+        }
+
+        private void OnImageCountDecrease(object sender, RoutedEventArgs e) {
+            var mdl = (ImageInfoModel) ((Button) sender).DataContext;
+            if (mdl.ImagesCount > 0)
+                mdl.ImagesCount--;
+        }
+
+        private void OnImageCountIncrease(object sender, RoutedEventArgs e) {
+            var mdl = (ImageInfoModel)((Button)sender).DataContext;
+            mdl.ImagesCount++;
         }
     }
 }
