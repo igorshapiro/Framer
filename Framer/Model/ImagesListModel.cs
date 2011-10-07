@@ -8,7 +8,16 @@ namespace Framer.Model
     public class ImagesListModel: INotifyPropertyChanged {
         public IList<ImageInfoModel> Images { get; set; }
         public IList<FrameInfoModel> Frames { get; set; }
-        public double ThumbnailSize { get; set; }
+
+        private double m_thumbnailSize;
+        public double ThumbnailSize {
+            get { return m_thumbnailSize; }
+            set {
+                m_thumbnailSize = value;
+                OnPropertyChanged("ThumbnailSize");
+            }
+        }
+
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
             get { return m_selectedFrame; }
