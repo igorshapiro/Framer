@@ -11,7 +11,7 @@ namespace Framer
     {
         public MainWindow() {
             InitializeComponent();
-            ctrlDesign.DataContext = GetImagesList();
+//            ctrlDesign.DataContext = GetImagesList();
             Loaded += MainWindow_Loaded;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -15,20 +16,11 @@ namespace Framer.Model
             set {
                 m_thumbnailSize = value;
                 OnPropertyChanged("ThumbnailSize");
+                
             }
         }
 
-        public IList<ImageInfoModel> FlattenedImageList {
-            get {
-                var result = new List<ImageInfoModel>();
-                foreach (var img in Images) {
-                    for (int i = 0; i < img.ImagesCount; i++) {
-                        result.Add(img);
-                    }
-                }
-                return result;
-            }
-        }
+        public ObservableCollection<ImageInfoModel> FlattenedImageList { get; set; }
 
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
@@ -53,6 +45,31 @@ namespace Framer.Model
                 .SelectMany(pattern => Directory.GetFiles(framesDir, pattern))
                 .Select(fn => new FrameInfoModel {Path = fn, WorldModel = this})
                 .ToList();
+
+            FlattenedImageList = new ObservableCollection<ImageInfoModel>();
+            RebuildFlattenedImageList();
+
+            foreach (var img in Images) {
+                img.PropertyChanged += ImagePropertyChangedHandler;
+            }
+        }
+
+        private void ImagePropertyChangedHandler(object sender, PropertyChangedEventArgs e) {
+            if (e.PropertyName == "ImagesCount") {
+                RebuildFlattenedImageList();
+                OnPropertyChanged("FlattenedImageList");
+            }
+        }
+
+        private void RebuildFlattenedImageList() {
+            FlattenedImageList.Clear();
+            foreach (var img in Images)
+            {
+                for (int i = 0; i < img.ImagesCount; i++)
+                {
+                    FlattenedImageList.Add(img);
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

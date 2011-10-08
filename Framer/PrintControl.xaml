@@ -5,21 +5,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:Model="clr-namespace:Framer.Model"
     mc:Ignorable="d" 
+    d:DesignWidth="300" d:DesignHeight="300"
 	d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
 	<Grid>
+        <Grid.Resources>
+            <CollectionViewSource x:Key="flatImagesSource" Source="{Binding FlattenedImageList}">
+            </CollectionViewSource>
+        </Grid.Resources>
+        
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="200" />
 		</Grid.ColumnDefinitions>
 
-        <ItemsControl ItemsSource="{Binding FlattenedImageList}">
+        <ItemsControl Name="icImages" 
+                      ItemsSource="{Binding Source={StaticResource flatImagesSource}}"
+                      >
+            <!--ItemsSource="{Binding Source={StaticResource flatImagesSource}}"-->
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                 <WrapPanel Orientation="Horizontal"/>
             </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
-				<DataTemplate>
+                <DataTemplate>
                     <Image 
                         Width="200"
                         Source="{Binding Path}" />

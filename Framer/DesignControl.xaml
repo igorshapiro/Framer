@@ -55,8 +55,8 @@
                                     <Image Source="{Binding Path}" Name="img"
                                                     Grid.Row="0" Grid.Column="0"
                                                     MouseUp="Image_MouseUp"
-                                                    Width="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}"
-                                                    Height="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ThumbnailSize}">
+                                                    Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}"
+                                                    Height="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}">
                                         <Image.Effect>
                                             <Code:BrightContrastEffect 
                                                             Brightness="{Binding Brightness}"
