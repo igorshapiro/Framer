@@ -1,4 +1,4 @@
-<UserControl x:Class="Framer.PrintControl"
+<UserControl x:Class="Framer.PrintControl" x:Name="this"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -7,33 +7,37 @@
     mc:Ignorable="d" 
     d:DesignWidth="300" d:DesignHeight="300"
 	d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
-	<Grid>
-        <Grid.Resources>
+    <DockPanel LastChildFill="True">
+        <DockPanel.Resources>
             <CollectionViewSource x:Key="flatImagesSource" Source="{Binding FlattenedImageList}">
             </CollectionViewSource>
-        </Grid.Resources>
-        
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="200" />
-		</Grid.ColumnDefinitions>
+        </DockPanel.Resources>
 
-        <ItemsControl Name="icImages" 
-                      ItemsSource="{Binding Source={StaticResource flatImagesSource}}"
-                      >
-            <!--ItemsSource="{Binding Source={StaticResource flatImagesSource}}"-->
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"/>
-            </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-			<ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Image 
-                        Width="200"
-                        Source="{Binding Path}" />
-                </DataTemplate>
-			</ItemsControl.ItemTemplate>
-		</ItemsControl>
-	</Grid>
+        <StackPanel Orientation="Vertical" Grid.Column="1" DockPanel.Dock="Right" MinWidth="200">
+            <Button Click="SelectPrinter_Click">Select printer</Button>
+            <Label>Zoom</Label>
+            <Slider Name="sldZoom" Minimum="0.25" Maximum="4" Value="{Binding PrintPreviewZoom}"></Slider>
+        </StackPanel>
+
+        <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" >
+            <Border.RenderTransform>
+                <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
+            </Border.RenderTransform>
+            <Grid HorizontalAlignment="Left" >
+                <ItemsControl Name="icImages"  ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+			        <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="200" Source="{Binding Path}" />
+                        </DataTemplate>
+			        </ItemsControl.ItemTemplate>
+		        </ItemsControl>
+            
+        </Grid>
+        </Border>
+    </DockPanel>
 </UserControl>

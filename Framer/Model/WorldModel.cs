@@ -34,7 +34,11 @@ namespace Framer.Model
             }
         }
 
+        public double PrintPreviewZoom { get; set; }
+
         public WorldModel(string imagesDir, string framesDir) {
+            PrintPreviewZoom = 1;
+
             ThumbnailSize = 200;
             Images = new[] {"*.png", "*.jpg", "*.bmp", "*.gif"}
                 .SelectMany(pattern => Directory.GetFiles(imagesDir, pattern))
