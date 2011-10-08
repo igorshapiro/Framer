@@ -19,10 +19,10 @@
         </StackPanel>
 
         <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" >
-            <Border.RenderTransform>
+            <Border.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
-            </Border.RenderTransform>
-            <Grid HorizontalAlignment="Left" >
+            </Border.LayoutTransform>
+            <Grid HorizontalAlignment="Left">
                 <ItemsControl Name="icImages"  ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
