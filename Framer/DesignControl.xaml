@@ -51,7 +51,9 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
                             <Border BorderBrush="Black" BorderThickness="2">
-                                <Framer:FramedImage  MouseUp="Image_MouseUp"/>
+                                <Framer:FramedImage  MouseUp="Image_MouseUp" 
+                                                     Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}"
+                                                     Height="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}"/>
                             </Border>
                             <Border Style="{StaticResource ResourceKey=styleImageControls}">
                                 <Grid VerticalAlignment="Center">

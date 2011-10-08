@@ -6,7 +6,7 @@
     xmlns:Model="clr-namespace:Framer.Model" xmlns:Framer="clr-namespace:Framer" mc:Ignorable="d" 
     d:DesignWidth="300" d:DesignHeight="300"
 	d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
-    <DockPanel LastChildFill="True">
+  <DockPanel LastChildFill="True">
         <DockPanel.Resources>
             <CollectionViewSource x:Key="flatImagesSource" Source="{Binding FlattenedImageList}">
             </CollectionViewSource>
@@ -16,27 +16,30 @@
             <Button Click="SelectPrinter_Click">Select printer</Button>
             <Label>Zoom</Label>
             <Slider Name="sldZoom" Minimum="0.25" Maximum="4" Value="{Binding PrintPreviewZoom}"></Slider>
+            <Label>Images in a row</Label>
+            <TextBox Text="{Binding ImagesPerRow}"></TextBox>
+            <Label>Image width</Label>
+            <TextBox Name="tbPrintedImageSize" Text="{Binding PrintedImageSize}"></TextBox>
         </StackPanel>
 
         <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" >
             <Border.LayoutTransform>
                 <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
             </Border.LayoutTransform>
-            <Grid HorizontalAlignment="Left">
-                <ItemsControl Name="icImages"  ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
+            <Grid HorizontalAlignment="Left" >
+                <ItemsControl Name="icImages" ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 			        <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Framer:FramedImage></Framer:FramedImage>
+                        <DataTemplate DataType="{x:Type Model:PrintedImageModel}">
+                            <Framer:FramedImage Width="{Binding ElementName=tbPrintedImageSize, Path=Text}" DataContext="{Binding Image}"></Framer:FramedImage>
                         </DataTemplate>
 			        </ItemsControl.ItemTemplate>
 		        </ItemsControl>
-            
-        </Grid>
+            </Grid>
         </Border>
     </DockPanel>
 </UserControl>

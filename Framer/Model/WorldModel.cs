@@ -10,6 +10,41 @@ namespace Framer.Model
         public IList<ImageInfoModel> Images { get; set; }
         public IList<FrameInfoModel> Frames { get; set; }
 
+        private int m_pageWidth;
+        public int PageWidth {
+            get { return m_pageWidth; }
+            set {
+                m_pageWidth = value;
+
+                if (ImagesPerRow != 0)
+                    PrintedImageSize = value/ImagesPerRow;
+
+                OnPropertyChanged("PageWidth");
+            }
+        }
+
+        private int m_imagesPerRow;
+        public int ImagesPerRow {
+            get { return m_imagesPerRow; }
+            set {
+                m_imagesPerRow = value;
+
+                if (value != 0)
+                    PrintedImageSize = PageWidth / value;
+
+                OnPropertyChanged("ImagesPerRow");
+            }
+        }
+
+        private int m_printedImageSize;
+        public int PrintedImageSize {
+            get { return m_printedImageSize; }
+            set {
+                m_printedImageSize = value;
+                OnPropertyChanged("PrintedImageSize");
+            }
+        }
+
         private double m_thumbnailSize;
         public double ThumbnailSize {
             get { return m_thumbnailSize; }
@@ -20,7 +55,7 @@ namespace Framer.Model
             }
         }
 
-        public ObservableCollection<ImageInfoModel> FlattenedImageList { get; set; }
+        public ObservableCollection<PrintedImageModel> FlattenedImageList { get; set; }
 
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
@@ -38,6 +73,8 @@ namespace Framer.Model
 
         public WorldModel(string imagesDir, string framesDir) {
             PrintPreviewZoom = 1;
+            PageWidth = 1024;
+            ImagesPerRow = 3;
 
             ThumbnailSize = 200;
             Images = new[] {"*.png", "*.jpg", "*.bmp", "*.gif"}
@@ -50,7 +87,7 @@ namespace Framer.Model
                 .Select(fn => new FrameInfoModel {Path = fn, WorldModel = this})
                 .ToList();
 
-            FlattenedImageList = new ObservableCollection<ImageInfoModel>();
+            FlattenedImageList = new ObservableCollection<PrintedImageModel>();
             RebuildFlattenedImageList();
 
             foreach (var img in Images) {
@@ -67,11 +104,13 @@ namespace Framer.Model
 
         private void RebuildFlattenedImageList() {
             FlattenedImageList.Clear();
+            int imageIndex = 0;
             foreach (var img in Images)
             {
                 for (int i = 0; i < img.ImagesCount; i++)
                 {
-                    FlattenedImageList.Add(img);
+                    FlattenedImageList.Add(new PrintedImageModel {Image = img, Column = imageIndex / ImagesPerRow, Row = imageIndex % ImagesPerRow});
+                    imageIndex++;
                 }
             }
         }
@@ -82,6 +121,12 @@ namespace Framer.Model
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class PrintedImageModel {
+        public ImageInfoModel Image { get; set; }
+        public int Row { get; set; }
+        public int Column { get; set; }
     }
 
     public class FrameInfoModel: INotifyPropertyChanged {

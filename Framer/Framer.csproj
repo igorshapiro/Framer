@@ -105,6 +105,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Code\PrintedImageSizeConverter.cs" />
     <Compile Include="DesignControl.xaml.cs">
       <DependentUpon>DesignControl.xaml</DependentUpon>
     </Compile>

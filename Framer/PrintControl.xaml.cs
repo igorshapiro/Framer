@@ -1,7 +1,7 @@
 using System.ComponentModel;
-using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
+using Framer.Model;
 
 namespace Framer {
     public partial class PrintControl: INotifyPropertyChanged {
@@ -32,6 +32,9 @@ namespace Framer {
                 grdPage.Arrange(new Rect(origin, extent));
 
                 m_printDialog = dlg;
+
+                var world = (WorldModel) DataContext;
+                world.PageWidth = (int) (printArea == null ? dlg.PrintableAreaWidth : printArea.ExtentWidth);
             }
         }
 
