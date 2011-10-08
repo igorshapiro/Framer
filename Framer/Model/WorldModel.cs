@@ -128,6 +128,13 @@ namespace Framer.Model
             }
         }
 
+        public bool HasImagesSelected {
+            get { return Images.Any(img => img.IsSelected); }
+            set {
+                
+            }
+        }
+
         public WorldModel(string imagesDir) {
             PrintPreviewZoom = 1;
             PageWidth = 1056;
@@ -151,6 +158,9 @@ namespace Framer.Model
             if (e.PropertyName == "ImagesCount") {
                 RebuildFlattenedImageList();
                 OnPropertyChanged("FlattenedImageList");
+            }
+            else if (e.PropertyName == "IsSelected") {
+                OnPropertyChanged("HasImagesSelected");
             }
         }
 
@@ -208,6 +218,15 @@ namespace Framer.Model
         public ImageSource Source { get; set; }
         private double m_brightness;
 
+        private bool m_isSelected;
+        public bool IsSelected {
+            get { return m_isSelected; }
+            set {
+                m_isSelected = value;
+                OnPropertyChanged("IsSelected");
+            }
+        }
+
         private FrameInfoModel m_frame;
         public FrameInfoModel Frame {
             get { return m_frame; }
@@ -247,6 +266,7 @@ namespace Framer.Model
             ImagesCount = 1;
             Brightness = 0;
             Contrast = 0;
+            IsSelected = true;
 
             byte[] buffer = File.ReadAllBytes(path);
             var ms = new MemoryStream(buffer);

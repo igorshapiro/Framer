@@ -18,7 +18,6 @@
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
-        <ResourceDictionary x:Key="appStyles" Source="Styles.xaml" />
     </UserControl.Resources>
     <DockPanel>
         <DockPanel.Resources>
@@ -68,7 +67,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <!-- Selection checkbox -->
-                                    <CheckBox Grid.Column="0" Margin="5, 0, 0, 0"  VerticalAlignment="Center"></CheckBox>
+                                    <CheckBox Grid.Column="0" Margin="5, 0, 0, 0" IsChecked="{Binding IsSelected}"  VerticalAlignment="Center"></CheckBox>
                                     <!-- Brightness slider -->
                                     <StackPanel Orientation="Vertical" Grid.Column="1" >
                                         <Label>Contrast</Label>

@@ -5,13 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
         xmlns:Framer="clr-namespace:Framer" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
     <DockPanel Name="grdOuter">
-        <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Options" Click="OnFileOptionsClick"></MenuItem>
-                <Separator/>
-                <MenuItem Header="_Exit" Click="OnFileExitClick"></MenuItem>
-            </MenuItem>
-        </Menu>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top">
+            <Menu IsMainMenu="True" >
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Options" Click="OnFileOptionsClick"></MenuItem>
+                    <Separator/>
+                    <MenuItem Header="_Exit" Click="OnFileExitClick"></MenuItem>
+                </MenuItem>
+            </Menu>
+            <ToolBarPanel Orientation="Horizontal">
+                <Button Click="SelectAll_Click">Select all</Button>
+                <Button Click="DeselectAll_Click" IsEnabled="{Binding HasImagesSelected}">Deselect all</Button>
+                <Separator></Separator>
+                <Button Click="ApplyToSelected_Click"  IsEnabled="{Binding HasImagesSelected}">Apply frame</Button>
+            </ToolBarPanel>
+        </StackPanel>
         <TabControl>
             <TabItem Header="Design">
                 <Framer:DesignControl x:Name="ctrlDesign"></Framer:DesignControl>

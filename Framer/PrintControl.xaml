@@ -20,6 +20,8 @@
             <TextBox Text="{Binding ImagesPerRow}"></TextBox>
             <Label>Image width</Label>
             <TextBox Name="tbPrintedImageSize" Text="{Binding PrintedImageSize}"></TextBox>
+            
+            <Button Click="SaveFiles_Click">Save as files</Button>
         </StackPanel>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -27,7 +29,7 @@
                 <Border.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
                 </Border.LayoutTransform>
-                <Grid HorizontalAlignment="Left" >
+                <Grid HorizontalAlignment="Left" Name="grdPage" >
                     <ItemsControl Name="icImages" ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>

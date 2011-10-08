@@ -1,6 +1,10 @@
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Framer.Model;
 
 namespace Framer {
@@ -14,11 +18,9 @@ namespace Framer {
         private void SelectPrinter_Click(object sender, RoutedEventArgs e) {
             var dlg = new PrintDialog();
             if (dlg.ShowDialog() == true) {
-                var grdPage = brdPreview;
-                grdPage.Height = dlg.PrintableAreaHeight + 50;
-                grdPage.Width = dlg.PrintableAreaWidth;
-                //grdPage.Width = dlg.PrintableAreaWidth;
-                grdPage.Measure(new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight));
+                brdPreview.Height = dlg.PrintableAreaHeight + 50;
+                brdPreview.Width = dlg.PrintableAreaWidth;
+                brdPreview.Measure(new Size(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight));
 
 
                 var printArea = dlg.PrintQueue.GetPrintCapabilities().PageImageableArea;
@@ -29,7 +31,7 @@ namespace Framer {
                                  ? new Point(printArea.ExtentWidth, printArea.ExtentHeight)
                                  : new Point(dlg.PrintableAreaWidth, dlg.PrintableAreaHeight);
 
-                grdPage.Arrange(new Rect(origin, extent));
+                brdPreview.Arrange(new Rect(origin, extent));
 
                 m_printDialog = dlg;
 
@@ -43,6 +45,17 @@ namespace Framer {
         public void OnPropertyChanged(string propertyName) {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void SaveFiles_Click(object sender, RoutedEventArgs e) {
+            var bmp = new RenderTargetBitmap((int) brdPreview.ActualWidth, (int) brdPreview.ActualHeight, 120, 96, PixelFormats.Pbgra32);
+            bmp.Render(grdPage);
+            
+            var png = new PngBitmapEncoder();
+            png.Frames.Add(BitmapFrame.Create(bmp));
+            using (var stream = File.Create(string.Format("{0:yyyyMMddhhmmss}.png", DateTime.Now))) {
+                png.Save(stream);
+            }
         }
     }
 }
