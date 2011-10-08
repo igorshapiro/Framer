@@ -1,0 +1,31 @@
+<UserControl x:Class="Framer.FramedImage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Model="clr-namespace:Framer.Model"
+    xmlns:Code="clr-namespace:Framer.Code" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" 
+    d:DataContext="{d:DesignInstance Type=Model:ImageInfoModel}">
+    <Grid>
+        <Image Source="{Binding Path}" Name="img"
+                                                    Grid.Row="0" Grid.Column="0"
+                                                    Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}"
+                                                    Height="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}">
+            <Image.Effect>
+                <Code:BrightContrastEffect 
+                                                            Brightness="{Binding Brightness}"
+                                                            Contrast="{Binding Contrast}"
+                                                            />
+            </Image.Effect>
+        </Image>
+        <Image Source="{Binding Path=Frame.Path}" 
+                                                       Grid.Row="0" Grid.Column="0"
+                                                       VerticalAlignment="Stretch"
+                                                       HorizontalAlignment="Stretch"
+                                                       Opacity="1"
+                                                       Width="{Binding ElementName=img, Path=ActualWidth}"
+                                                       Height="{Binding ElementName=img, Path=ActualHeight}"
+                                                       >
+        </Image>
+    </Grid>
+</UserControl>

@@ -42,7 +42,7 @@ namespace Framer
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var world = (WorldModel)DataContext;
-            var imgInfo = (ImageInfoModel)((Image)sender).DataContext;
+            var imgInfo = (ImageInfoModel)((FramedImage)sender).DataContext;
             if (world.SelectedFrame != null)
                 imgInfo.Frame = world.SelectedFrame;
         }
