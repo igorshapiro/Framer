@@ -1,14 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Framer.Model
 {
     public class WorldModel: INotifyPropertyChanged {
-        public IList<ImageInfoModel> Images { get; set; }
-        public IList<FrameInfoModel> Frames { get; set; }
+        private IList<ImageInfoModel> m_images;
+        public IList<ImageInfoModel> Images {
+            get { return m_images; }
+            set {
+                m_images = value;
+                RebuildFlattenedImageList();
+                OnPropertyChanged("Images");
+            }
+        }
+
+        private IList<FrameInfoModel> m_frames;
+        public IList<FrameInfoModel> Frames {
+            get { return m_frames; }
+            set {
+                m_frames = value;
+                OnPropertyChanged("Frames");
+            }
+        }
 
         private int m_pageWidth;
         public int PageWidth {
@@ -71,23 +91,55 @@ namespace Framer.Model
 
         public double PrintPreviewZoom { get; set; }
 
-        public WorldModel(string imagesDir, string framesDir) {
+        private string m_framesDirectory;
+        public string FramesDirectory {
+            get { return m_framesDirectory; }
+            set {
+                if (string.IsNullOrEmpty(value) || !Directory.Exists(value)) return;
+                m_framesDirectory = value;
+                Frames = new[] { "*.png", "*.gif" }
+                    .SelectMany(pattern => Directory.GetFiles(value, pattern))
+                    .Select(fn => new FrameInfoModel { Path = fn, WorldModel = this })
+                    .ToList();
+
+                OnPropertyChanged("FramesDirectory");
+            }
+        }
+
+        private string m_imagesDirectory;
+        public string ImagesDirectory {
+            get { return m_imagesDirectory; }
+            set {
+                if (string.IsNullOrEmpty(value) || !Directory.Exists(value)) return;
+                m_imagesDirectory = value;
+                var list = new List<ImageInfoModel>();
+                foreach (string pattern in new[] {"*.png", "*.jpg", "*.bmp", "*.gif"})
+                    foreach (string file in Directory.GetFiles(value, pattern)) {
+                        try {
+                            list.Add(new ImageInfoModel(file));
+                        }
+                        catch(Exception) {
+                            MessageBox.Show(@"Unable to load image " + file);
+                        }
+                    }
+                        
+                Images = list;
+                OnPropertyChanged("ImagesDirectory");
+            }
+        }
+
+        public WorldModel(string imagesDir) {
             PrintPreviewZoom = 1;
-            PageWidth = 1024;
+            PageWidth = 1056;
             ImagesPerRow = 3;
 
             ThumbnailSize = 200;
-            Images = new[] {"*.png", "*.jpg", "*.bmp", "*.gif"}
-                .SelectMany(pattern => Directory.GetFiles(imagesDir, pattern))
-                .Select(fn => new ImageInfoModel {Path = fn})
-                .ToList();
-
-            Frames = new[] {"*.png", "*.gif"}
-                .SelectMany(pattern => Directory.GetFiles(framesDir, pattern))
-                .Select(fn => new FrameInfoModel {Path = fn, WorldModel = this})
-                .ToList();
 
             FlattenedImageList = new ObservableCollection<PrintedImageModel>();
+
+            FramesDirectory = App.Settings.FramesDirectory;
+            ImagesDirectory = imagesDir;
+
             RebuildFlattenedImageList();
 
             foreach (var img in Images) {
@@ -103,6 +155,7 @@ namespace Framer.Model
         }
 
         private void RebuildFlattenedImageList() {
+            if (Images == null) return;
             FlattenedImageList.Clear();
             int imageIndex = 0;
             foreach (var img in Images)
@@ -151,7 +204,8 @@ namespace Framer.Model
     }
 
     public class ImageInfoModel: INotifyPropertyChanged {
-        public string Path { get; set; }
+//        public string Path { get; set; }
+        public ImageSource Source { get; set; }
         private double m_brightness;
 
         private FrameInfoModel m_frame;
@@ -189,10 +243,25 @@ namespace Framer.Model
             }
         }
 
-        public ImageInfoModel() {
+        public ImageInfoModel(string path) {
             ImagesCount = 1;
             Brightness = 0;
             Contrast = 0;
+
+            byte[] buffer = File.ReadAllBytes(path);
+            var ms = new MemoryStream(buffer);
+
+            var bmp = new BitmapImage();
+            bmp.BeginInit();
+
+            bmp.DecodePixelWidth = 500;
+
+            bmp.StreamSource = ms;
+
+            bmp.EndInit();
+            bmp.Freeze();
+
+            Source = bmp;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

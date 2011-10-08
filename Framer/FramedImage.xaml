@@ -7,22 +7,20 @@
     mc:Ignorable="d" 
     d:DataContext="{d:DesignInstance Type=Model:ImageInfoModel}">
     <Grid>
-        <Image Source="{Binding Path}" Name="img" Grid.Row="0" Grid.Column="0">
+        <!--Margin="50, 50, 50, 50"-->
+        <Image Source="{Binding Source}" Name="img" Grid.Row="0" Grid.Column="0" >
             <Image.Effect>
-                <Code:BrightContrastEffect 
-                                                            Brightness="{Binding Brightness}"
-                                                            Contrast="{Binding Contrast}"
-                                                            />
+                <Code:BrightContrastEffect Brightness="{Binding Brightness}" Contrast="{Binding Contrast}" />
             </Image.Effect>
         </Image>
-        <Image Source="{Binding Path=Frame.Path}" 
-                                                       Grid.Row="0" Grid.Column="0"
-                                                       VerticalAlignment="Stretch"
-                                                       HorizontalAlignment="Stretch"
-                                                       Opacity="1"
-                                                       Width="{Binding ElementName=img, Path=ActualWidth}"
-                                                       Height="{Binding ElementName=img, Path=ActualHeight}"
-                                                       >
+        <Image  Source="{Binding Path=Frame.Path}" 
+                Grid.Row="0" Grid.Column="0"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Opacity="1"
+                Width="{Binding ElementName=img, Path=ActualWidth}"
+                Height="{Binding ElementName=img, Path=ActualHeight}"
+                >
         </Image>
     </Grid>
 </UserControl>

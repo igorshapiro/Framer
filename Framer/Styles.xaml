@@ -2,14 +2,24 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="styleImageControls" TargetType="Border">
         <Style.Resources>
-            <LinearGradientBrush x:Key="BackBrush" StartPoint="0.5,0" EndPoint="0.5,1" >
-                <GradientStop Color="#FFD800" Offset="0.1" />
-                <GradientStop Color="#FFB27F" Offset="0.9" />
+            <LinearGradientBrush x:Key="BackBrush" StartPoint="0,0" EndPoint="1,0" >
+                <GradientStop Color="#FFD800" Offset="0" />
+                <GradientStop Color="#FFB27F" Offset="1" />
             </LinearGradientBrush>
         </Style.Resources>
         <Setter Property="Background" Value="{StaticResource BackBrush}"/>
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Margin" Value="2,4" />
+    </Style>
+    <Style x:Key="styleImageDesign" TargetType="StackPanel" >
+        <Style.Resources>
+            <LinearGradientBrush x:Key="brGradient" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="LightGray" Offset="0.7" />
+                <GradientStop Color="DarkGray" Offset="1" />
+            </LinearGradientBrush>
+        </Style.Resources>
+        <Setter Property="Background" Value="{StaticResource brGradient}"/>
+        <Setter Property="Margin" Value="10, 10, 10, 10" />
     </Style>
 </ResourceDictionary>

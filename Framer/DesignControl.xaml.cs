@@ -1,7 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Framer.Model;
+using Microsoft.Win32;
+using Button = System.Windows.Controls.Button;
+using DragDropEffects = System.Windows.DragDropEffects;
+using DragEventArgs = System.Windows.DragEventArgs;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Framer
 {
@@ -45,6 +51,28 @@ namespace Framer
             var imgInfo = (ImageInfoModel)((FramedImage)sender).DataContext;
             if (world.SelectedFrame != null)
                 imgInfo.Frame = world.SelectedFrame;
+        }
+
+        private void ChooseFramesDir_Click(object sender, RoutedEventArgs e) {
+            var dlg = new FolderBrowserDialog();
+            if (dlg.ShowDialog() == DialogResult.Cancel) return;
+
+            App.Settings.FramesDirectory = dlg.SelectedPath;
+            App.Settings.Save();
+
+            var world = (WorldModel) DataContext;
+            world.FramesDirectory = dlg.SelectedPath;
+        }
+
+        private void ChooseImagesDir_Click(object sender, RoutedEventArgs e) {
+            var dlg = new FolderBrowserDialog();
+            if (dlg.ShowDialog() == DialogResult.Cancel) return;
+
+            App.Settings.ImagesDirectory = dlg.SelectedPath;
+            App.Settings.Save();
+
+            var world = (WorldModel)DataContext;
+            world.ImagesDirectory = dlg.SelectedPath;            
         }
     }
 }

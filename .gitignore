@@ -4,4 +4,4 @@ obj/
 *resharper*
 *resharper*/
 *.user
-
+publish/

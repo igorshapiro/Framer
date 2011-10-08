@@ -22,24 +22,26 @@
             <TextBox Name="tbPrintedImageSize" Text="{Binding PrintedImageSize}"></TextBox>
         </StackPanel>
 
-        <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" >
-            <Border.LayoutTransform>
-                <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
-            </Border.LayoutTransform>
-            <Grid HorizontalAlignment="Left" >
-                <ItemsControl Name="icImages" ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-			        <ItemsControl.ItemTemplate>
-                        <DataTemplate DataType="{x:Type Model:PrintedImageModel}">
-                            <Framer:FramedImage Width="{Binding ElementName=tbPrintedImageSize, Path=Text}" DataContext="{Binding Image}"></Framer:FramedImage>
-                        </DataTemplate>
-			        </ItemsControl.ItemTemplate>
-		        </ItemsControl>
-            </Grid>
-        </Border>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" Width="{Binding PageWidth}" >
+                <Border.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
+                </Border.LayoutTransform>
+                <Grid HorizontalAlignment="Left" >
+                    <ItemsControl Name="icImages" ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+			            <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type Model:PrintedImageModel}">
+                                <Framer:FramedImage Width="{Binding ElementName=tbPrintedImageSize, Path=Text}" DataContext="{Binding Image}"></Framer:FramedImage>
+                            </DataTemplate>
+			            </ItemsControl.ItemTemplate>
+		            </ItemsControl>
+                </Grid>
+            </Border>
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

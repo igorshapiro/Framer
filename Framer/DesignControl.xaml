@@ -18,6 +18,7 @@
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
+        <ResourceDictionary x:Key="appStyles" Source="Styles.xaml" />
     </UserControl.Resources>
     <DockPanel>
         <DockPanel.Resources>
@@ -31,14 +32,18 @@
             </StackPanel>
         </StackPanel>
         <!-- Frames pane -->
-        <ItemsControl DockPanel.Dock="Right" ItemsSource="{Binding Frames}" 
-                                   ItemTemplate="{StaticResource frame}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Right" >
+            <Button Click="ChooseFramesDir_Click">Choose frames directory</Button>
+            <Button Click="ChooseImagesDir_Click">Choose images directory</Button>
+            <ItemsControl ItemsSource="{Binding Frames}" 
+                                       ItemTemplate="{StaticResource frame}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
         <!-- Images content view -->
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Images}" Name="icList" AllowDrop="True" DragEnter="OnImagesListDragEnter">
@@ -49,7 +54,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
+                        <StackPanel Orientation="Vertical" Style="{StaticResource styleImageDesign}">
                             <Border BorderBrush="Black" BorderThickness="2">
                                 <Framer:FramedImage  MouseUp="Image_MouseUp" 
                                                      Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=DataContext.ThumbnailSize}"

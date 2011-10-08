@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using Framer.Model;
 
@@ -11,7 +12,6 @@ namespace Framer
     {
         public MainWindow() {
             InitializeComponent();
-//            ctrlDesign.DataContext = GetImagesList();
             Loaded += MainWindow_Loaded;
         }
 
@@ -20,8 +20,18 @@ namespace Framer
         }
 
         public WorldModel GetImagesList() {
-            return new WorldModel(@"C:\Users\Public\Pictures\Sample Pictures",
-                @"C:\Users\Public\Pictures\Frames");
+            var cmdLineArgs = Environment.GetCommandLineArgs();
+            string imagesFolder;
+            if (cmdLineArgs.Length > 1)
+                imagesFolder = cmdLineArgs[1];
+            else {
+                imagesFolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonPictures);
+                if (!Directory.Exists(imagesFolder))
+                    imagesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+                else if (!Directory.Exists(imagesFolder))
+                    imagesFolder = null;
+            }
+            return new WorldModel(imagesFolder);
         }
 
         private void OnFileExitClick(object sender, RoutedEventArgs e) {
