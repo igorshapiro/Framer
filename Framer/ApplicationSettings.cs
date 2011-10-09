@@ -11,11 +11,16 @@ namespace Framer {
 
         public string ImagesDirectory { get; set; }
 
+        private static string ConfigFile {
+            get {
+                string dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                return Path.Combine(dir ?? Directory.GetCurrentDirectory(), SETTINGS_FILE_NAME);
+            }
+        }
+
         internal static ApplicationSettings Load() {
-            string fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                                           SETTINGS_FILE_NAME);
-            if (File.Exists(fileName)) {
-                return JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(fileName));
+            if (File.Exists(ConfigFile)) {
+                return JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(ConfigFile));
             }
             string defaultFramesDirectory = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frames");
@@ -23,7 +28,7 @@ namespace Framer {
         }
 
         public void Save() {
-            File.WriteAllText(SETTINGS_FILE_NAME, JsonConvert.SerializeObject(this));
+            File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(this));
         }
     }
 }
