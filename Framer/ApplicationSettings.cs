@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using Newtonsoft.Json;
 
 namespace Framer {
@@ -10,10 +12,14 @@ namespace Framer {
         public string ImagesDirectory { get; set; }
 
         internal static ApplicationSettings Load() {
-            if (File.Exists(SETTINGS_FILE_NAME)) {
-                return JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(SETTINGS_FILE_NAME));
+            string fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                                           SETTINGS_FILE_NAME);
+            if (File.Exists(fileName)) {
+                return JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(fileName));
             }
-            return new ApplicationSettings { FramesDirectory = @"C:\Users\Public\Pictures\Frames" };
+            string defaultFramesDirectory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Frames");
+            return new ApplicationSettings { FramesDirectory = defaultFramesDirectory };
         }
 
         public void Save() {
