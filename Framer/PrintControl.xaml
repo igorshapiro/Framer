@@ -8,7 +8,8 @@
 	d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
   <DockPanel LastChildFill="True">
         <DockPanel.Resources>
-            <CollectionViewSource x:Key="flatImagesSource" Source="{Binding FlattenedImageList}">
+            <CollectionViewSource x:Key ="cvsPages" Source="{Binding Path=Pages}" />
+            <CollectionViewSource x:Key="flatImagesSource" Source="{Binding Source={StaticResource cvsPages}, Path=Images}">
             </CollectionViewSource>
         </DockPanel.Resources>
 
@@ -22,6 +23,7 @@
             <TextBox Name="tbPrintedImageSize" Text="{Binding PrintedImageSize}"></TextBox>
             
             <Button Click="SaveFiles_Click">Save as files</Button>
+            <ComboBox Name="cbPages" ItemsSource="{Binding Source={StaticResource cvsPages}}" DisplayMemberPath="PageString"></ComboBox>
         </StackPanel>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -29,8 +31,8 @@
                 <Border.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
                 </Border.LayoutTransform>
-                <Grid HorizontalAlignment="Left" Name="grdPage" >
-                    <ItemsControl Name="icImages" ItemsSource="{Binding Source={StaticResource flatImagesSource}}">
+                <Grid HorizontalAlignment="Left" Name="grdPage">
+                    <ItemsControl Name="icImages" ItemsSource="{Binding ElementName=cbPages, Path=SelectedValue.Images}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />

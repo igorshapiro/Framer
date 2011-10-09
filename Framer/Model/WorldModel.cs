@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -16,7 +15,7 @@ namespace Framer.Model
             get { return m_images; }
             set {
                 m_images = value;
-                RebuildFlattenedImageList();
+                RebuildPages();
                 OnPropertyChanged("Images");
             }
         }
@@ -39,7 +38,21 @@ namespace Framer.Model
                 if (ImagesPerRow != 0)
                     PrintedImageSize = value/ImagesPerRow;
 
+                RebuildPages();
+
                 OnPropertyChanged("PageWidth");
+            }
+        }
+
+        private int m_pageHeight;
+        public int PageHeight {
+            get { return m_pageHeight; }
+            set {
+                m_pageHeight = value;
+
+                RebuildPages();
+
+                OnPropertyChanged("PageHeight");
             }
         }
 
@@ -52,6 +65,7 @@ namespace Framer.Model
                 if (value != 0)
                     PrintedImageSize = PageWidth / value;
 
+                RebuildPages();
                 OnPropertyChanged("ImagesPerRow");
             }
         }
@@ -75,7 +89,14 @@ namespace Framer.Model
             }
         }
 
-        public ObservableCollection<PrintedImageModel> FlattenedImageList { get; set; }
+        private IList<Page> m_pages;
+        public IList<Page> Pages {
+            get { return m_pages; }
+            set {
+                m_pages = value;
+                OnPropertyChanged("Pages");
+            }
+        }
 
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
@@ -130,24 +151,21 @@ namespace Framer.Model
 
         public bool HasImagesSelected {
             get { return Images.Any(img => img.IsSelected); }
-            set {
-                
-            }
+            set {}
         }
 
         public WorldModel(string imagesDir) {
             PrintPreviewZoom = 1;
-            PageWidth = 1056;
+            PageWidth = 860;
+            PageHeight = 1056;
             ImagesPerRow = 3;
 
             ThumbnailSize = 200;
 
-            FlattenedImageList = new ObservableCollection<PrintedImageModel>();
-
             FramesDirectory = App.Settings.FramesDirectory;
             ImagesDirectory = imagesDir;
 
-            RebuildFlattenedImageList();
+            RebuildPages();
 
             foreach (var img in Images) {
                 img.PropertyChanged += ImagePropertyChangedHandler;
@@ -156,7 +174,7 @@ namespace Framer.Model
 
         private void ImagePropertyChangedHandler(object sender, PropertyChangedEventArgs e) {
             if (e.PropertyName == "ImagesCount") {
-                RebuildFlattenedImageList();
+                RebuildPages();
                 OnPropertyChanged("FlattenedImageList");
             }
             else if (e.PropertyName == "IsSelected") {
@@ -164,18 +182,49 @@ namespace Framer.Model
             }
         }
 
-        private void RebuildFlattenedImageList() {
+        private void RebuildPages() {
             if (Images == null) return;
-            FlattenedImageList.Clear();
-            int imageIndex = 0;
+            var flatList = new List<ImageInfoModel>();
             foreach (var img in Images)
             {
                 for (int i = 0; i < img.ImagesCount; i++)
                 {
-                    FlattenedImageList.Add(new PrintedImageModel {Image = img, Column = imageIndex / ImagesPerRow, Row = imageIndex % ImagesPerRow});
-                    imageIndex++;
+                    flatList.Add(img);
                 }
             }
+
+            var pages = new List<Page>();
+            int imageIndex = 0;
+            while (imageIndex < flatList.Count) {
+            // Yes yes yes! Goto pending... 
+            nextPage:
+                var page = new Page {PageString = (pages.Count + 1).ToString()};
+                pages.Add(page);
+                int totalHeight = 0;
+                int imageOnPageIndex = 0;
+
+                while (totalHeight <= PageHeight && imageIndex < flatList.Count) {
+                    int maxHeight = 0;
+                    for (int column = 0; column < ImagesPerRow && imageIndex < flatList.Count; column++) {
+                        var img = flatList[imageIndex];
+                        var height = (int) (img.Source.Height * (PageWidth / (double)ImagesPerRow) / img.Source.Width);
+                        if (height > maxHeight) maxHeight = height;
+
+                        if (totalHeight + height > PageHeight) goto nextPage;
+
+                        page.Images.Add(new PrintedImageModel
+                                        {
+                                            Image = img, 
+                                            Column = imageOnPageIndex % ImagesPerRow, 
+                                            Row = imageOnPageIndex / ImagesPerRow
+                                        });
+                        imageIndex++;
+                        imageOnPageIndex++;
+                    }
+                    totalHeight += maxHeight;
+                }
+            }
+            Pages = pages;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -183,6 +232,15 @@ namespace Framer.Model
         public void OnPropertyChanged(string propertyName) {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class Page {
+        public IList<PrintedImageModel> Images { get; set; }
+        public string PageString { get; set; }
+
+        public Page() {
+            Images = new List<PrintedImageModel>();
         }
     }
 
@@ -268,6 +326,10 @@ namespace Framer.Model
             Contrast = 0;
             IsSelected = true;
 
+            BitmapDecoder decoder = BitmapDecoder.Create(new Uri(path), BitmapCreateOptions.None, BitmapCacheOption.None);
+            BitmapFrame frame = decoder.Frames[0];
+            var rotation = frame.PixelHeight > frame.PixelWidth ? Rotation.Rotate90 : Rotation.Rotate0;
+
             byte[] buffer = File.ReadAllBytes(path);
             var ms = new MemoryStream(buffer);
 
@@ -275,8 +337,9 @@ namespace Framer.Model
             bmp.BeginInit();
 
             bmp.DecodePixelWidth = 1200;
-
             bmp.StreamSource = ms;
+
+            bmp.Rotation = rotation;
 
             bmp.EndInit();
             bmp.Freeze();
