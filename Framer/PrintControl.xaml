@@ -9,7 +9,6 @@
   <DockPanel LastChildFill="True">
         <DockPanel.Resources>
             <CollectionViewSource x:Key ="cvsPages" Source="{Binding Path=Pages}" />
-            <Framer:UnusedSpaceWarningVisibilityConverter x:Key="convUnusedSpaceWarning" />
         </DockPanel.Resources>
 
         <StackPanel Orientation="Vertical" Grid.Column="1" DockPanel.Dock="Right" MinWidth="200">
@@ -23,13 +22,7 @@
             
             <Button Click="SaveFiles_Click">Save as files</Button>
             <ComboBox Name="cbPages" ItemsSource="{Binding Source={StaticResource cvsPages}}" DisplayMemberPath="PageString"></ComboBox>
-            
-            <StackPanel Visibility="{Binding Path=UnusedSpaceInImages, Converter={StaticResource convUnusedSpaceWarning}}">
-                <TextBlock Foreground="Red" FontSize="16">
-                    <Bold>Warning: </Bold> you have unused space for <TextBlock Text="{Binding Path=UnusedSpaceInImages}"/> images
-                </TextBlock>
-            </StackPanel>
-            
+                        
             <Button Click="Print_Click">Print</Button>
         </StackPanel>
 

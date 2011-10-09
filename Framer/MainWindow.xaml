@@ -14,10 +14,19 @@
                 </MenuItem>
             </Menu>
             <ToolBarPanel Orientation="Horizontal">
+                <ToolBarPanel.Resources>
+                    <Framer:UnusedSpaceWarningVisibilityConverter x:Key="convUnusedSpaceWarning" />
+                </ToolBarPanel.Resources>
                 <Button Click="SelectAll_Click">Select all</Button>
                 <Button Click="DeselectAll_Click" IsEnabled="{Binding HasImagesSelected}">Deselect all</Button>
                 <Separator></Separator>
                 <Button Click="ApplyToSelected_Click"  IsEnabled="{Binding HasImagesSelected}">Apply frame</Button>
+
+                <StackPanel Visibility="{Binding Path=UnusedSpaceInImages, Converter={StaticResource convUnusedSpaceWarning}}">
+                    <TextBlock Foreground="Red" FontSize="16">
+                    <Bold>Warning: </Bold> you have unused space for <TextBlock Text="{Binding Path=UnusedSpaceInImages}"/> images
+                </TextBlock>
+                </StackPanel>
             </ToolBarPanel>
         </StackPanel>
         <TabControl>
