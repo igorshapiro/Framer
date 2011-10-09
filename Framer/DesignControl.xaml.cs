@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -39,12 +40,6 @@ namespace Framer
             mdl.ImagesCount++;
         }
 
-        private void Frame_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            var mdl = (FrameInfoModel)((Image)sender).DataContext;
-            mdl.WorldModel.SelectedFrame = mdl;
-        }
-
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var world = (WorldModel)DataContext;
@@ -73,6 +68,20 @@ namespace Framer
 
             var world = (WorldModel)DataContext;
             world.ImagesDirectory = dlg.SelectedPath;            
+        }
+
+        private void Frame_Click(object sender, RoutedEventArgs e) {
+            var mdl = (FrameInfoModel)((FrameworkElement)sender).DataContext;
+            mdl.WorldModel.SelectedFrame = mdl;
+        }
+
+        private void Frame_DoubleClick(object sender, MouseButtonEventArgs e) {
+            var world = (WorldModel)DataContext;
+            var frame = (FrameInfoModel) ((FrameworkElement) sender).DataContext;
+            if (world.SelectedFrame == null) return;
+            foreach (var img in world.Images.Where(img => img.IsSelected)) {
+                img.Frame = frame;
+            }
         }
     }
 }

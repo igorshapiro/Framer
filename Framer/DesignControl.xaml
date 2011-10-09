@@ -7,9 +7,12 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=Model:WorldModel}">
     <UserControl.Resources>
-        <DataTemplate x:Key="frame">
+        <DataTemplate x:Key="frame" DataType="{x:Type Model:FrameInfoModel}">
             <Border Name="frameImgBorder" BorderBrush="Black" BorderThickness="3">
-                <Image Source="{Binding Path}" Width="200" MouseUp="Frame_MouseUp" Opacity="0.95" />
+                <Button Background="White" MouseDoubleClick="Frame_DoubleClick" Click="Frame_Click">
+                    <Image Source="{Binding Path}" Width="200" Opacity="0.95" />
+                    <!--MouseUp="Frame_MouseUp" -->
+                </Button>
             </Border>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
