@@ -113,8 +113,8 @@ namespace Framer.Model
                 if (string.IsNullOrEmpty(value) || !Directory.Exists(value)) return;
                 m_imagesDirectory = value;
                 var list = new List<ImageInfoModel>();
-                foreach (string pattern in new[] {"*.png", "*.jpg", "*.bmp", "*.gif"})
-                    foreach (string file in Directory.GetFiles(value, pattern)) {
+                foreach (var pattern in new[] {"*.png", "*.jpg", "*.bmp", "*.gif"})
+                    foreach (var file in Directory.GetFiles(value, pattern)) {
                         try {
                             list.Add(new ImageInfoModel(file));
                         }
@@ -274,7 +274,7 @@ namespace Framer.Model
             var bmp = new BitmapImage();
             bmp.BeginInit();
 
-            bmp.DecodePixelWidth = 500;
+            bmp.DecodePixelWidth = 1200;
 
             bmp.StreamSource = ms;
 
