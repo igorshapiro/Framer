@@ -17,6 +17,7 @@
                 Grid.Row="0" Grid.Column="0"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
+                Stretch="Fill"
                 Opacity="1"
                 Width="{Binding ElementName=img, Path=ActualWidth}"
                 Height="{Binding ElementName=img, Path=ActualHeight}"

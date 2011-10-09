@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Annotations;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -30,6 +30,13 @@ namespace Framer {
             set {
                 m_pageWidth = value;
                 OnPropertyChanged("PageWidth");
+                OnPropertyChanged("PageBorderWidth");
+            }
+        }
+
+        public double PageBorderWidth {
+            get {
+                return m_pageWidth + 4;
             }
         }
 
@@ -147,6 +154,17 @@ namespace Framer {
 
         public override IDocumentPaginatorSource Source {
             get { return null; }
+        }
+    }
+
+    public class UnusedSpaceWarningVisibilityConverter: IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            var unusedImagesSpace = (int) value;
+            return unusedImagesSpace > 0 ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
+            throw new NotImplementedException();
         }
     }
 }

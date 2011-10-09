@@ -98,6 +98,15 @@ namespace Framer.Model
             }
         }
 
+        private int m_unusedSpaceInImages;
+        public int UnusedSpaceInImages {
+            get { return m_unusedSpaceInImages; }
+            set {
+                m_unusedSpaceInImages = value;
+                OnPropertyChanged("UnusedSpaceInImages");
+            }
+        }
+
         private FrameInfoModel m_selectedFrame;
         public FrameInfoModel SelectedFrame {
             get { return m_selectedFrame; }
@@ -202,9 +211,12 @@ namespace Framer.Model
                 pages.Add(page);
                 int totalHeight = 0;
                 int imageOnPageIndex = 0;
+                int rowsInPage = 0;
+                int lastRowImages = 0;
 
                 while (totalHeight <= PageHeight && imageIndex < flatList.Count) {
                     int maxHeight = 0;
+                    lastRowImages = 0;
                     for (int column = 0; column < ImagesPerRow && imageIndex < flatList.Count; column++) {
                         var img = flatList[imageIndex];
                         var height = (int) (img.Source.Height * (PageWidth / (double)ImagesPerRow) / img.Source.Width);
@@ -220,8 +232,17 @@ namespace Framer.Model
                                         });
                         imageIndex++;
                         imageOnPageIndex++;
+                        lastRowImages++;
                     }
+                    rowsInPage++;
                     totalHeight += maxHeight;
+                }
+                if (totalHeight < PageHeight) {
+                    double averageHeight = (double)totalHeight/rowsInPage;
+                    int unusedHeight = PageHeight - totalHeight;
+                    int unusedSpaceInImages = unusedHeight/(int)averageHeight * (int)Math.Floor(PageHeight / averageHeight - rowsInPage);
+
+                    UnusedSpaceInImages = unusedSpaceInImages + ImagesPerRow - lastRowImages;
                 }
             }
             Pages = pages;
