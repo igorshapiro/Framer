@@ -9,8 +9,6 @@
   <DockPanel LastChildFill="True">
         <DockPanel.Resources>
             <CollectionViewSource x:Key ="cvsPages" Source="{Binding Path=Pages}" />
-            <CollectionViewSource x:Key="flatImagesSource" Source="{Binding Source={StaticResource cvsPages}, Path=Images}">
-            </CollectionViewSource>
         </DockPanel.Resources>
 
         <StackPanel Orientation="Vertical" Grid.Column="1" DockPanel.Dock="Right" MinWidth="200">
@@ -24,28 +22,56 @@
             
             <Button Click="SaveFiles_Click">Save as files</Button>
             <ComboBox Name="cbPages" ItemsSource="{Binding Source={StaticResource cvsPages}}" DisplayMemberPath="PageString"></ComboBox>
+            
+            <Button Click="Print_Click">Print</Button>
         </StackPanel>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" Width="{Binding PageWidth}" >
-                <Border.LayoutTransform>
-                    <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
-                </Border.LayoutTransform>
-                <Grid HorizontalAlignment="Left" Name="grdPage">
-                    <ItemsControl Name="icImages" ItemsSource="{Binding ElementName=cbPages, Path=SelectedValue.Images}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-			            <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type Model:PrintedImageModel}">
-                                <Framer:FramedImage Width="{Binding ElementName=tbPrintedImageSize, Path=Text}" DataContext="{Binding Image}"></Framer:FramedImage>
-                            </DataTemplate>
-			            </ItemsControl.ItemTemplate>
-		            </ItemsControl>
-                </Grid>
-            </Border>
+            <ItemsControl Name="icPages"  ItemsSource="{Binding Pages}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="2" BorderBrush="Black" Name="brdPreview" Width="{Binding ElementName=this, Path=PageWidth}" 
+                                Height="{Binding ElementName=this, Path=PageHeight}">
+                            <Border.LayoutTransform>
+                                <ScaleTransform ScaleX="{Binding ElementName=sldZoom,Path=Value}" ScaleY="{Binding ElementName=sldZoom,Path=Value}" />
+                            </Border.LayoutTransform>
+                            <Grid HorizontalAlignment="Left" Name="grdPage">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="{Binding ElementName=this, Path=OriginX}"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="{Binding ElementName=this, Path=OriginY}"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+<!--
+                                <Grid.LayoutTransform>
+                                    <TranslateTransform X="{Binding ElementName=this, Path=OriginX}" Y="{Binding ElementName=this, Path=OriginY}"></TranslateTransform>
+                                </Grid.LayoutTransform>
+-->
+                                <ItemsControl Name="icImages" ItemsSource="{Binding Path=Images}" Grid.Column="1" Grid.Row="1">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type Model:PrintedImageModel}">
+                                            <Framer:FramedImage Width="{Binding ElementName=tbPrintedImageSize, Path=Text}" DataContext="{Binding Image}"></Framer:FramedImage>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
     </DockPanel>
 </UserControl>
